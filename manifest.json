@@ -1,0 +1,19 @@
+{
+  "name": "ScreenGif",
+  "description": "Gif capturing extension that will allow you to record on your browser to create a gif instantly",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action":{
+    "default_popup":"popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches":["<all_urls>"],
+      "js":["content.js"]
+    }
+  ],
+  "permissions": ["tabs", "activeTab", "desktopCapture"]
+}
