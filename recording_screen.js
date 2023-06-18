@@ -21,12 +21,9 @@ const convertBlobToBase64 = (blob) => {
 chrome.runtime.onMessage.addListener((message) => {
   if (message.name === 'startRecordingOnBackground') {
    console.log(message);
-  // Send a message to the background script
-chrome.runtime.sendMessage({name: "myMessage", data: "Hello from recording_screen.js"});
 
-  // Prompt user to choose screen or window
   chrome.desktopCapture.chooseDesktopMedia(
-    ['screen', 'window'],
+    ['window'],
     function (streamId) {
       if (streamId == null) {
         return;

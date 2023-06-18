@@ -3,27 +3,34 @@ const startRecording = async () => {
 
     const currentTab = tabs[0];
 
-    const tab = await chrome.tabs.create({
+    chrome.windows.create({
       url: chrome.runtime.getURL('recording_screen.html'),
-      pinned: true,
-      active: true,
-    });
+      type: 'popup',
+      left: 0,
+      top: 0, 
+      width: 375,
+      height: 667
+  }, function(window) {
+    // Listen for tab updates
+    chrome.tabs.onUpdated.addListener(function listener(tabId, info, tab) {
+        // Check if the updated tab belongs to the new window and its status is 'complete'
+        if (tab.windowId === window.id && info.status === 'complete' && tab.url === chrome.runtime.getURL('recording_screen.html')) {
+            // Remove the listener
+            chrome.tabs.onUpdated.removeListener(listener);
 
-    // Wait for recording screen tab to be loaded and send message to it with the currentTab
-    chrome.tabs.onUpdated.addListener(async function listener(tabId, info) {
-      if (tabId === tab.id && info.status === 'complete') {
-        chrome.tabs.onUpdated.removeListener(listener);
-        console.log(currentTab);
-        await chrome.tabs.sendMessage(tabId, {
-          name: 'startRecordingOnBackground',
-          body: {
-            currentTab: currentTab,
-          },
-        });
-      }
+            // Send the message
+            chrome.tabs.sendMessage(tabId, {
+                name: 'startRecordingOnBackground',
+                body: {
+                    currentTab: currentTab,
+                },
+            });
+        }
     });
+});
   });
 };
+
 
 // Listen for startRecording message from popup.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
