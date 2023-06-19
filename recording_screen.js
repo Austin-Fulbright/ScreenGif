@@ -51,19 +51,12 @@ chrome.runtime.onMessage.addListener((message) => {
           const blobFile = new Blob(chunks, { type: "video/webm" });
           const base64 = await fetchBlob(URL.createObjectURL(blobFile));
         
-          // Create a new video element
-          const video = document.createElement('video');
-          video.src = base64;
-          video.controls = true;
-          video.autoplay = true;
+          // Send the base64 video data to background.js
+          chrome.runtime.sendMessage({name: 'videoData', data: base64});
         
-          // Append the video element to the body of the document
-          document.body.appendChild(video);
-        
-          // Stop all tracks of stream
           stream.getTracks().forEach(track => track.stop());
+          window.close();
         }
-        
 
         mediaRecorder.start();
       }).finally(async () => {
