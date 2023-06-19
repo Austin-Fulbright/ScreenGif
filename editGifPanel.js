@@ -1,3 +1,5 @@
+
+
 document.addEventListener('DOMContentLoaded', function() {
 
   
@@ -40,5 +42,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set the src of the video element to the cropped video
     video.src = croppedVideoData;
   });
+  document.getElementById('cropButton').addEventListener('click', function() {
+    // Calculate the crop values
+    var cropArea = document.getElementById('cropArea');
+    var video = document.getElementById('video');
+    
+    var cropX = cropArea.offsetLeft / video.videoWidth;
+    var cropY = cropArea.offsetTop / video.videoHeight;
+    var cropWidth = cropArea.offsetWidth / video.videoWidth;
+    var cropHeight = cropArea.offsetHeight / video.videoHeight;
   
+    // Get the base64 video data from the video element
+    var base64VideoData = video.src;
+  
+    // Use ffmpeg.js to crop the video
+    var croppedVideoData = cropVideoWithFfmpeg(base64VideoData, cropX, cropY, cropWidth, cropHeight);
+  
+    // Set the src of the video element to the cropped video
+    video.src = croppedVideoData;
+  });
+  
+  function cropVideoWithFfmpeg(base64VideoData, cropX, cropY, cropWidth, cropHeight) {
+    
+    //NEED TO IMPLEMENT THIS FUNCTION with ffmpeg or another type of cropping algorithm
+    
+    return base64VideoData;
+  }
   
